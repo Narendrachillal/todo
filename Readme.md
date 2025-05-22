@@ -25,59 +25,68 @@ A full-stack application where users can manage personal to-do items, generate a
 
 ---
 
-## 📂 Folder Structure
-
-todo-summary-assistant/
-
-├── client/
-
-│ ├── src/
-
-│ │ ├── components/
-
-│ │ │ ├── TodoForm.jsx
-
-│ │ │ ├── TodoList.jsx
-
-│ │ │ └── Notification.jsx
-
-│ │ ├── App.jsx
-
-│ │ ├── main.jsx
-
-│ │ └── index.css
-
-│ ├── vite.config.js
-
-│ └── package.json
-
-│
-
-├── server/ # Node.js backend
-
-│ ├── routes/
-
-│ │ └── todos.js
-
-│ ├── services/
-
-│ │ ├── openaiService.js
-
-│ │ └── slackService.js
-
-│ ├── server.js
-
-│ ├── .env.example
-
-│ └── package.json
-
-│
-
-├── README.md
-
-└── .gitignore
 
 ---
+
+## ⚙️ Setup Instructions
+
+### 🔧 Backend Setup
+
+1. Go to `server/` directory  :
+```cd server```
+3. Install dependencies  : ```npm i```
+
+4. Create a `.env` file (based on `.env.example`) and add your keys:
+```
+PORT=5000
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+OPENAI_API_KEY=your_openai_api_key
+SLACK_WEBHOOK_URL=your_slack_webhook_url
+```
+
+4. Start the backend server
+   ```npm run dev```
+
+---
+
+### 🎨 Frontend Setup
+
+1. Go to `client/` directory  
+```
+cd client
+```
+
+2. Install dependencies  
+```
+npm install
+```
+
+3. Start the frontend development server  
+``` npm run dev```
+
+
+## 📝 LLM (OpenAI) Setup Guide
+
+1. Create a free account at [OpenAI](https://platform.openai.com/).
+2. Go to API Keys in the OpenAI dashboard.
+3. Generate a new secret key.
+4. Add this key to your backend `.env` file as: OPENAI_API_KEY=your_openai_key
+5. The app uses the `gpt-3.5-turbo` model via their `/v1/chat/completions` endpoint.
+
+---
+
+## 📣 Slack Webhook Setup Guide
+
+1. Go to your Slack workspace.
+2. Navigate to **Settings → Integrations → Incoming Webhooks**.
+3. Click **Add New Webhook to Workspace**.
+4. Choose the target channel and authorize.
+5. Copy the generated webhook URL.
+6. Add this to your backend `.env` file as: SLACK_WEBHOOK_URL=your_webhook_url
+
+
+
 
 ## 📝 Design & Architecture Decisions
 
