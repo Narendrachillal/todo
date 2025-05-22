@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { TextField, Button, Stack } from "@mui/material";
 
 export default function TodoForm({ onSubmit, todoToEdit, onCancel }) {
   const [title, setTitle] = useState("");
@@ -16,44 +17,25 @@ export default function TodoForm({ onSubmit, todoToEdit, onCancel }) {
   };
 
   return (
-    // <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-    //   <input
-    //     type="text"
-    //     placeholder="Enter todo"
-    //     value={title}
-    //     onChange={e => setTitle(e.target.value)}
-    //     style={{ padding: '8px', width: '300px' }}
-    //   />
-    //   <button type="submit" style={{ marginLeft: '10px' }}>
-    //     {todoToEdit ? 'Update' : 'Add'}
-    //   </button>
-    //   {todoToEdit && (
-    //     <button
-    //       type="button"
-    //       onClick={onCancel}
-    //       style={{ marginLeft: '10px', backgroundColor: '#ccc' }}
-    //     >
-    //       Cancel
-    //     </button>
-    //   )}
-    // </form>
-    <form
-      onSubmit={handleSubmit}
-      style={{ marginBottom: "20px" }}
-      className="todo-form"
-    >
-      <input
-        type="text"
-        placeholder="Enter todo"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <button type="submit">{todoToEdit ? "Update" : "Add"}</button>
-      {todoToEdit && (
-        <button type="button" onClick={onCancel} className="cancel">
-          Cancel
-        </button>
-      )}
+    <form onSubmit={handleSubmit}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <TextField
+          fullWidth
+          size="small"
+          label="Enter task"
+          variant="outlined"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <Button type="submit" variant="contained" color="primary">
+          {todoToEdit ? "Update" : "Add"}
+        </Button>
+        {todoToEdit && (
+          <Button variant="outlined" color="secondary" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
+      </Stack>
     </form>
   );
 }

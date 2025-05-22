@@ -1,7 +1,13 @@
 import axios from "axios";
 
 export const generateSummary = async (todos) => {
-  const content = todos
+  const pendingTodos = todos.filter((todo) => !todo.completed);
+
+  if (pendingTodos.length === 0) {
+    return "There are no pending tasks at the moment!";
+  }
+
+  const content = pendingTodos
     .map((todo, index) => `${index + 1}. ${todo.title}`)
     .join("\n");
 
@@ -17,7 +23,7 @@ export const generateSummary = async (todos) => {
           },
           {
             role: "user",
-            content: `Summarize the following todos:\n${content}`,
+            content: `Summarize the following pending todos:\n${content}`,
           },
         ],
       },

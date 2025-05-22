@@ -4,12 +4,13 @@ import TodoForm from "./components/TodoForm.jsx";
 import TodoList from "./components/TodoList.jsx";
 import Notification from "./components/Notification.jsx";
 
+import { Container, Typography, Button, Box } from "@mui/material";
+
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [todoToEdit, setTodoToEdit] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
 
-  // Fetch todos
   const fetchTodos = async () => {
     try {
       const res = await api.get("/todos");
@@ -23,21 +24,17 @@ export default function App() {
     fetchTodos();
   }, []);
 
-  // Notification helper
   const showNotification = (message, type = "success") => {
     setNotification({ message, type });
     setTimeout(() => setNotification({ message: "", type: "" }), 3000);
   };
 
-  // Add or update todo
   const handleSubmit = async ({ title, id }) => {
     try {
       if (id) {
-        // update
         await api.patch(`/todos/${id}`, { title });
         showNotification("Todo updated");
       } else {
-        // add
         await api.post("/todos", { title });
         showNotification("Todo added");
       }
@@ -48,7 +45,6 @@ export default function App() {
     }
   };
 
-  // Delete todo
   const handleDelete = async (id) => {
     try {
       await api.delete(`/todos/${id}`);
@@ -60,10 +56,18 @@ export default function App() {
     }
   };
 
-  // Summarize & send Slack
+  const handleToggleComplete = async (id, currentValue) => {
+    try {
+      await api.patch(`/todos/${id}`, { completed: !currentValue });
+      fetchTodos();
+    } catch (error) {
+      showNotification("Failed to update completion status", "error");
+    }
+  };
+
   const handleSummarize = async () => {
     try {
-      const res = await api.post("/summarize");
+      await api.post("/summarize");
       showNotification("Summary sent to Slack!");
     } catch (error) {
       showNotification("Failed to send summary", "error");
@@ -71,18 +75,36 @@ export default function App() {
   };
 
   return (
-    <div style={{ padding: "30px", maxWidth: "600px", margin: "auto" }}>
-      <h1>Todo Summary Assistant</h1>
-      <Notification message={notification.message} type={notification.type} />
-      <TodoForm
-        onSubmit={handleSubmit}
-        todoToEdit={todoToEdit}
-        onCancel={() => setTodoToEdit(null)}
-      />
-      <TodoList todos={todos} onEdit={setTodoToEdit} onDelete={handleDelete} />
-      <button onClick={handleSummarize} className="summarize">
-        Generate & Send Summary to Slack
-      </button>
-    </div>
+    <Container maxWidth="sm">
+      <Box sx={{ textAlign: "center", my: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Todo Summary Assistant
+        </Typography>
+
+        <Notification message={notification.message} type={notification.type} />
+
+        <TodoForm
+          onSubmit={handleSubmit}
+          todoToEdit={todoToEdit}
+          onCancel={() => setTodoToEdit(null)}
+        />
+
+        <TodoList
+          todos={todos}
+          onEdit={setTodoToEdit}
+          onDelete={handleDelete}
+          handleToggleComplete={handleToggleComplete}
+        />
+
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mt: 3 }}
+          onClick={handleSummarize}
+        >
+          Generate & Send Summary to Slack
+        </Button>
+      </Box>
+    </Container>
   );
 }

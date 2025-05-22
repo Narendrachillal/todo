@@ -36,11 +36,15 @@ export const deleteTodo = async (req, res) => {
 // Update a todo by id
 export const updateTodo = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { title, completed } = req.body;
+
+  const updateFields = {};
+  if (title !== undefined) updateFields.title = title;
+  if (completed !== undefined) updateFields.completed = completed;
 
   const { data, error } = await supabase
     .from("todos")
-    .update({ title })
+    .update(updateFields)
     .eq("id", id)
     .select();
 
