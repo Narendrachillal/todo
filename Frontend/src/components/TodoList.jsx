@@ -7,9 +7,11 @@ import {
   Stack,
   Typography,
   Box,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useState } from "react";
 
 export default function TodoList({
   todos,
@@ -17,22 +19,26 @@ export default function TodoList({
   onDelete,
   handleToggleComplete,
 }) {
+  const [page, setPage] = useState(1);
+  const todosPerPage = 5;
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
+
+  const indexOfLastTodo = page * todosPerPage;
+  const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+  const currentTodos = todos.slice(indexOfFirstTodo, indexOfLastTodo);
+  const totalPages = Math.ceil(todos.length / todosPerPage);
+
   if (!todos || todos.length === 0) {
     return <Typography>No todos found.</Typography>;
   }
 
   return (
-    <Box
-      sx={{
-        maxHeight: "300px", 
-        overflowY: "auto",
-        border: "1px solid #ccc",
-        borderRadius: 1,
-        mt: 2,
-      }}
-    >
+    <Box sx={{ mt: 2 }}>
       <List>
-        {todos.map((todo) => (
+        {currentTodos.map((todo) => (
           <ListItem
             key={todo.id}
             sx={{
@@ -69,6 +75,16 @@ export default function TodoList({
           </ListItem>
         ))}
       </List>
+
+      <Stack direction="row" justifyContent="center" mt={2}>
+        <Pagination
+          count={totalPages}
+          page={page}
+          onChange={handleChangePage}
+          color="primary"
+          shape="rounded"
+        />
+      </Stack>
     </Box>
   );
 }
